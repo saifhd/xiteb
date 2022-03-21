@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SubCategoriesController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,4 +36,11 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/sub-categories/{sub_category}/edit', [SubCategoriesController::class, 'edit'])->name('sub-categories.edit');
     Route::put('/sub-categories/{sub_category}', [SubCategoriesController::class, 'update'])->name('sub-categories.update');
     Route::delete('/sub-categories/{sub_category}', [SubCategoriesController::class, 'destroy'])->name('sub-categories.destroy');
+
+    Route::get('/products', [ProductsController::class,'index'])->name('products.index');
+    Route::get('/products/create', [ProductsController::class, 'create'])->name('products.create');
+    Route::post('/products', [ProductsController::class, 'store'])->name('products.store');
+    Route::get('/products/{product}/edit', [ProductsController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [ProductsController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}', [ProductsController::class, 'destroy'])->name('products.destroy');
 });

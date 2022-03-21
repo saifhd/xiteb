@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(SubCategory::class,'staff_id','id');
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'staff_id', 'id');
+    }
 }
