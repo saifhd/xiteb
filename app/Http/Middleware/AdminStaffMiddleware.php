@@ -16,7 +16,7 @@ class AdminStaffMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!auth()->user->role->name == 'admin' || auth()->user()->role->name == 'staff'){
+        if(!auth()->user()->role->name == 'admin' || !auth()->user()->role->name == 'staff'){
             return redirect()->back();
         }
         return $next($request);

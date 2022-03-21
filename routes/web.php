@@ -23,24 +23,9 @@ Route::get('/',[HomeController::class,'index'])->name('home');
 require __DIR__.'/auth.php';
 
 Route::group(['middleware' => ['auth', 'admin_or_staff']], function(){
-    Route::get('/categories',[CategoriesController::class , 'index'])->name('categories.index');
-    Route::get('/categories/create', [CategoriesController::class, 'create'])->name('categories.create');
-    Route::post('/categories', [CategoriesController::class, 'store'])->name('categories.store');
-    Route::get('/categories/{category}/edit', [CategoriesController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{category}', [CategoriesController::class, 'update'])->name('categories.update');
-    Route::delete('/categories/{category}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
+    Route::resource('/categories',CategoriesController::class);
+    
+    Route::resource('/sub-categories',SubCategoriesController::class);
 
-    Route::get('/sub-categories', [SubCategoriesController::class, 'index'])->name('sub-categories.index');
-    Route::get('/sub-categories/create', [SubCategoriesController::class, 'create'])->name('sub-categories.create');
-    Route::post('/sub-categories', [SubCategoriesController::class, 'store'])->name('sub-categories.store');
-    Route::get('/sub-categories/{sub_category}/edit', [SubCategoriesController::class, 'edit'])->name('sub-categories.edit');
-    Route::put('/sub-categories/{sub_category}', [SubCategoriesController::class, 'update'])->name('sub-categories.update');
-    Route::delete('/sub-categories/{sub_category}', [SubCategoriesController::class, 'destroy'])->name('sub-categories.destroy');
-
-    Route::get('/products', [ProductsController::class,'index'])->name('products.index');
-    Route::get('/products/create', [ProductsController::class, 'create'])->name('products.create');
-    Route::post('/products', [ProductsController::class, 'store'])->name('products.store');
-    Route::get('/products/{product}/edit', [ProductsController::class, 'edit'])->name('products.edit');
-    Route::put('/products/{product}', [ProductsController::class, 'update'])->name('products.update');
-    Route::delete('/products/{product}', [ProductsController::class, 'destroy'])->name('products.destroy');
+    Route::resource('/products',ProductsController::class);
 });
