@@ -7,6 +7,7 @@ use App\Models\category;
 use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends Controller
@@ -55,6 +56,10 @@ class ProductsController extends Controller
 
     public function edit(Product $product)
     {
+        if (!Gate::allows('product', $product)) {
+            abort(403);
+        }
+        
         $product = $product->load('subCategory.category');
         return view('products.edit',[
             'product' => $product
@@ -63,6 +68,10 @@ class ProductsController extends Controller
 
     public function update(ProductRequest $request,Product $product)
     {
+        if (!Gate::allows('product', $product)) {
+            abort(403);
+        }
+
         $product->update([
             'name' => $request->name,
             'description' => $request->description,
@@ -87,6 +96,10 @@ class ProductsController extends Controller
 
     public function destroy(Product $product)
     {
+        if (!Gate::allows('product', $product)) {
+            abort(403);
+        }
+
         foreach($product->images as $image){
             Storage::disk('public')->delete($image->image_path);
         }

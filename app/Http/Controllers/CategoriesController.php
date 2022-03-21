@@ -6,6 +6,7 @@ use App\Http\Requests\CategoryRequest;
 use App\Http\Requests\categoryUpdateRequest;
 use App\Models\category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class CategoriesController extends Controller
@@ -39,6 +40,10 @@ class CategoriesController extends Controller
 
     public function edit(category $category)
     {
+        if (!Gate::allows('category', $category)) {
+            abort(403);
+        }
+        
         return view('categories.edit',[
             'category' => $category
         ]);
@@ -46,6 +51,10 @@ class CategoriesController extends Controller
 
     public function update(Category $category, categoryUpdateRequest $request)
     {
+        if (!Gate::allows('category',$category)) {
+            abort(403);
+        }
+
         $category->update([
             'name' => $request->name
         ]);
@@ -65,6 +74,9 @@ class CategoriesController extends Controller
 
     public function destroy(Category $category)
     {
+        if (!Gate::allows('admin_request')) {
+            abort(403);
+        }
         $category->delete();
         return redirect()->back()->with('success', 'Successfully Category Deleted');
     }

@@ -56,14 +56,16 @@
                                                     <div class="flex space-x-4">
                                                         <a href="{{ route('sub-categories.edit',$sub_category->id) }}"
                                                             class="text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                                        <form action="{{ route('sub-categories.destroy',$sub_category->id) }}"
-                                                            method="post"
-                                                            onsubmit="return confirm('Are sure to perform delete action?')">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button type="submit"
-                                                                class="text-red-600 dark:text-blue-500 hover:underline">Delete</button>
-                                                        </form>
+                                                        @can('admin_request')
+                                                            <form action="{{ route('sub-categories.destroy',$sub_category->id) }}"
+                                                                method="post"
+                                                                onsubmit="return confirm('Are sure to perform delete action?')">
+                                                                @csrf
+                                                                @method('delete')
+                                                                <button type="submit"
+                                                                    class="text-red-600 dark:text-blue-500 hover:underline">Delete</button>
+                                                            </form>
+                                                        @endcan
                                                     </div>
                                                 </td>
                                             </tr>

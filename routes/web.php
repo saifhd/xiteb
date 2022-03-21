@@ -22,7 +22,7 @@ Route::get('/',[HomeController::class,'index'])->name('home');
 
 require __DIR__.'/auth.php';
 
-Route::group(['middleware' => 'auth'], function(){
+Route::group(['middleware' => ['auth', 'admin_or_staff']], function(){
     Route::get('/categories',[CategoriesController::class , 'index'])->name('categories.index');
     Route::get('/categories/create', [CategoriesController::class, 'create'])->name('categories.create');
     Route::post('/categories', [CategoriesController::class, 'store'])->name('categories.store');

@@ -7,6 +7,7 @@ use App\Http\Requests\SubCategoryUpdateRequest;
 use App\Models\category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class SubCategoriesController extends Controller
@@ -49,6 +50,10 @@ class SubCategoriesController extends Controller
 
     public function edit(SubCategory $sub_category)
     {
+        if (!Gate::allows('sub_category', $sub_category)) {
+            abort(403);
+        }
+        
         $categories = category::select('id', 'name')
             ->where('staff_id', auth()->user()->id)
             ->get();
@@ -61,6 +66,10 @@ class SubCategoriesController extends Controller
 
     public function  update(SubCategoryUpdateRequest $request,SubCategory $sub_category)
     {
+        if (!Gate::allows('sub_category', $sub_category)) {
+            abort(403);
+        }
+
         if($request->has('image')){
             if($sub_category->image_path){
                 Storage::disk('public')->delete($sub_category->image_path);
@@ -81,6 +90,10 @@ class SubCategoriesController extends Controller
 
     public function destroy(SubCategory $sub_category)
     {
+        if (!Gate::allows('admin_request')) {
+            abort(403);
+        }
+
         $sub_category->delete();
         return redirect()->back()->with('success', 'Successfully Sub Category Deleted');
     }
