@@ -17,7 +17,7 @@ class Product extends Model
         'sub_category_id'
     ];
 
-    public function user()
+    public function staff()
     {
         return $this->belongsTo(User::class, 'staff_id', 'id');
     }
