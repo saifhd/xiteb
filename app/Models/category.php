@@ -9,10 +9,14 @@ class category extends Model
 {
     use HasFactory;
 
+    const VISIBLE = 0;
+    const HIDDEN =1;
+
     protected $fillable = [
         'name',
         'image_path',
-        'staff_id'
+        'staff_id',
+        'is_hidden'
     ];
 
     public function staff()

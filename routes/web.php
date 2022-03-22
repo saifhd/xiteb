@@ -29,8 +29,10 @@ Route::get('/home/{category}/{sub_category}',[HomeController::class,'showProduct
 require __DIR__.'/auth.php';
 
 Route::group(['middleware' => ['auth', 'admin_or_staff']], function(){
+    Route::post('categories/status/{category}',[CategoriesController::class,'changeStatus'])->name('categories.status');
     Route::resource('/categories',CategoriesController::class);
 
+    Route::post('sub-categories/status/{sub_category}', [SubCategoriesController::class, 'changeStatus'])->name('sub-categories.status');
     Route::resource('/sub-categories',SubCategoriesController::class);
 
     Route::resource('/products',ProductsController::class);

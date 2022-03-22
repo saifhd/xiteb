@@ -15,7 +15,10 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $categories = category::orderByDesc('id')->paginate(15);
+        $categories = category::query()
+            ->where('is_hidden',category::VISIBLE)
+            ->orderByDesc('id')
+            ->paginate(15);
         return view('home',[
             'categories' => $categories
         ]);
@@ -25,6 +28,7 @@ class HomeController extends Controller
     {
         $sub_categories = SubCategory::query()
             ->where('category_id',$category->id)
+            ->where('is_hidden',SubCategory::VISIBLE)
             ->orderByDesc('id')
             ->paginate(15);
 

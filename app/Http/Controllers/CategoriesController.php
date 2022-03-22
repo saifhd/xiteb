@@ -13,11 +13,17 @@ class CategoriesController extends Controller
 {
     public function index()
     {
+        $categories = category::query();
+
+        if(auth()->user()->role->name == 'staff')
+        {
+            $categories = $categories->where('staff_id', auth()->user()->id);
+        }
+
+        $categories = $categories->orderByDesc('id')->paginate(15);
+
         return view('categories.index',[
-            'categories' => category::query()
-                ->where('staff_id',auth()->user()->id)
-                ->orderByDesc('id')
-                ->paginate(15)
+            'categories' =>$categories
         ]);
     }
 
@@ -43,7 +49,7 @@ class CategoriesController extends Controller
         if (!Gate::allows('category', $category)) {
             abort(403);
         }
-        
+
         return view('categories.edit',[
             'category' => $category
         ]);
@@ -79,5 +85,13 @@ class CategoriesController extends Controller
         }
         $category->delete();
         return redirect()->back()->with('success', 'Successfully Category Deleted');
+    }
+
+    public function changeStatus(Category $category)
+    {
+        $category->update([
+            'is_hidden' => $category->is_hidden == 0 ? 1 : 0
+        ]);
+        return redirect()->back()->with('success', 'Successfully Changed Category status');
     }
 }

@@ -15,10 +15,12 @@ class SubCategoriesController extends Controller
 
     public function index()
     {
-        $sub_categories = SubCategory::query()
-            ->where('staff_id',auth()->user()->id)
-            ->with('category:id,name')
-            ->paginate(15);
+        $sub_categories = SubCategory::query();
+
+        if(auth()->user()->role->name == "staff"){
+            $sub_categories = $sub_categories->where('staff_id', auth()->user()->id);
+        }
+        $sub_categories = $sub_categories->with('category:id,name')->paginate(15);
 
         return view('sub_categories.index',[
             'sub_categories' => $sub_categories
@@ -29,6 +31,7 @@ class SubCategoriesController extends Controller
     {
         $categories = category::select('id','name')
             ->where('staff_id',auth()->user()->id)
+            ->where('is_hidden', category::VISIBLE)
             ->get();
         return view('sub_categories.create',[
             'categories' => $categories
@@ -53,9 +56,10 @@ class SubCategoriesController extends Controller
         if (!Gate::allows('sub_category', $sub_category)) {
             abort(403);
         }
-        
+
         $categories = category::select('id', 'name')
             ->where('staff_id', auth()->user()->id)
+            ->where('is_hidden',category::VISIBLE)
             ->get();
 
         return view('sub_categories.edit',[
@@ -96,5 +100,13 @@ class SubCategoriesController extends Controller
 
         $sub_category->delete();
         return redirect()->back()->with('success', 'Successfully Sub Category Deleted');
+    }
+
+    public function changeStatus(SubCategory $sub_category)
+    {
+        $sub_category->update([
+            'is_hidden' => $sub_category->is_hidden == 0 ? 1 : 0
+        ]);
+        return redirect()->back()->with('success', 'Successfully Changed Sub Category status');
     }
 }

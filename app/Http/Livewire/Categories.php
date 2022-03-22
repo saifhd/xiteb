@@ -17,6 +17,7 @@ class Categories extends Component
     {
         $this->categories = category::select('id', 'name')
             ->where('staff_id', auth()->user()->id)
+            ->where('is_hidden', category::VISIBLE)
             ->get();
         if($this->selectedCategory)
         {
@@ -32,6 +33,8 @@ class Categories extends Component
     public function updatedselectedCategory()
     {
         $this->sub_categories = SubCategory::select('id','name')
-            ->where('category_id',$this->selectedCategory)->get();
+            ->where('category_id',$this->selectedCategory)
+            ->where('is_hidden', SubCategory::VISIBLE)
+            ->get();
     }
 }

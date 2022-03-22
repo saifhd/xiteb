@@ -9,11 +9,15 @@ class SubCategory extends Model
 {
     use HasFactory;
 
+    const HIDDEN = 1;
+    const VISIBLE = 0;
+
     protected $fillable = [
         'name',
         'image_path',
         'staff_id',
-        'category_id'
+        'category_id',
+        'is_hidden'
     ];
 
     public function category()

@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
-use App\Models\category;
 use App\Models\Image;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,10 +15,13 @@ class ProductsController extends Controller
         $products = Product::query()
             ->with(['subCategory'=>function($q){
                 $q->select('id','name','category_id')->with('category:id,name');
-            }])
-            ->where('staff_id',auth()->user()->id)
-            ->orderByDesc('id')
-            ->paginate(15);
+            }]);
+
+        if (auth()->user()->role->name == "staff") {
+            $products = $products->where('staff_id', auth()->user()->id);
+        }
+
+        $products = $products->orderByDesc('id')->paginate(15);
 
         return view('products.index',[
             'products' => $products
@@ -59,7 +60,7 @@ class ProductsController extends Controller
         if (!Gate::allows('product', $product)) {
             abort(403);
         }
-        
+
         $product = $product->load('subCategory.category');
         return view('products.edit',[
             'product' => $product

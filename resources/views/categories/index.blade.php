@@ -30,6 +30,10 @@
                                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
                                                     Category Name
                                                 </th>
+                                                <th scope="col"
+                                                    class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
+                                                    Status
+                                                </th>
                                                 <th scope="col" class="p-4">
                                                 </th>
                                             </tr>
@@ -46,9 +50,27 @@
                                                 <td
                                                     class="py-4 px-6 text-sm font-medium text-gray-500 whitespace-nowrap dark:text-white">
                                                     {{ $category->name }}</td>
+                                                <td class="py-4 px-6 text-sm font-medium text-gray-500 whitespace-nowrap dark:text-white">
+                                                    @if($category->is_hidden == 0)
+                                                        <span class="text-white bg-green-600 px-4 py-1 rounded-full"> Visible</span>
+                                                    @else
+                                                        <span class="text-white bg-red-600 px-4 py-1 rounded-full">Hidden</span>
+                                                    @endif
+                                                </td>
 
                                                 <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
                                                     <div class="flex space-x-4">
+                                                        @can('admin_request')
+                                                            <form action="{{ route('categories.status',$category->id) }}" method="post"
+                                                                onsubmit="return confirm('Are sure to perform this action?')">
+                                                                @csrf
+                                                                @if($category->is_hidden == 0)
+                                                                    <button type="submit" class="text-red-600 dark:text-blue-500 hover:underline">Hide</button>
+                                                                @else
+                                                                    <button type="submit" class="text-green-600 dark:text-blue-500 hover:underline">Visible</button>
+                                                                @endif
+                                                            </form>
+                                                        @endcan
                                                         <a href="{{ route('categories.edit',$category->id) }}"
                                                             class="text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
 
